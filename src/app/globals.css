@@ -19,6 +19,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -26,6 +27,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Georgia, "Times New Roman", serif;
+  overflow-x: hidden;
 }
 
 a {
@@ -93,6 +95,11 @@ video {
   border-radius: 8px;
   overflow: hidden;
   position: relative;
+}
+
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 @media (max-width: 760px) {
