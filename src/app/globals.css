@@ -1,24 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f0e8;
-  --foreground: #18352d;
-  --forest: #18352d;
-  --cream: #f4f0e8;
-  --sand: #d7c7a6;
-  --sage: #81917f;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-forest: var(--forest);
-  --color-cream: var(--cream);
-  --color-sand: var(--sand);
-  --color-sage: var(--sage);
-
-  --font-sans: var(--font-body);
-  --font-title: var(--font-title);
+  --background: #e5f4ee;
+  --foreground: #1d2a24;
+  --muted: #6c7469;
+  --river: #2f7f7a;
+  --river-dark: #1f5957;
+  --leaf: #3f6f4d;
+  --clay: #ef7b2d;
+  --sand: #eadfc9;
+  --paper: #fffaf0;
+  --line: rgba(29, 42, 36, 0.16);
 }
 
 * {
@@ -33,19 +25,78 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-body), Arial, sans-serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
-button,
 a {
-  -webkit-tap-highlight-color: transparent;
+  color: inherit;
+  text-decoration: none;
 }
 
-::selection {
-  background: var(--forest);
-  color: var(--cream);
+img,
+video {
+  max-width: 100%;
 }
 
-.font-title {
-  font-family: var(--font-title), Georgia, serif;
+.section-shell {
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 92px 24px;
+}
+
+.section-kicker {
+  color: var(--river-dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.2rem, 5vw, 4.7rem);
+  font-weight: 500;
+  line-height: 0.96;
+  margin: 0;
+}
+
+.section-copy {
+  color: var(--muted);
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.75;
+}
+
+.pill-link {
+  align-items: center;
+  background: var(--foreground);
+  border: 1px solid var(--foreground);
+  border-radius: 999px;
+  color: var(--paper);
+  display: inline-flex;
+  font-size: 0.95rem;
+  font-weight: 700;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 20px;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.pill-link:hover {
+  background: transparent;
+  color: var(--foreground);
+  transform: translateY(-2px);
+}
+
+.image-frame {
+  background: var(--sand);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (max-width: 760px) {
+  .section-shell {
+    padding: 68px 18px;
+  }
 }

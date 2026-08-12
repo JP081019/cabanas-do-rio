@@ -1,22 +1,10 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-title",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const manrope = Manrope({
-  variable: "--font-body",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Cabanas do Rio | Cabanas e Pousadas",
+  title: "Cabanas do Rio",
   description:
-    "Cabanas confortáveis em meio à natureza de Alfredo Wagner, Santa Catarina.",
+    "Hospedagem intimista junto ao rio, com cabanas acolhedoras e experiências de natureza.",
 };
 
 export default function RootLayout({
@@ -26,11 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${cormorant.variable} ${manrope.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
