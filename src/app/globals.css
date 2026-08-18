@@ -97,6 +97,117 @@ video {
   position: relative;
 }
 
+.cabin-tag {
+  align-items: center;
+  background: #f7f4eb;
+  border: 1px solid rgba(29, 42, 36, 0.1);
+  border-radius: 999px;
+  color: #5b6257;
+  display: inline-flex;
+  font-size: 0.82rem;
+  font-weight: 700;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 12px;
+}
+
+.testimonial-marquee {
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  position: relative;
+}
+
+.testimonial-marquee::before,
+.testimonial-marquee::after {
+  content: "";
+  inset-block: 0;
+  pointer-events: none;
+  position: absolute;
+  width: min(18vw, 180px);
+  z-index: 1;
+}
+
+.testimonial-marquee::before {
+  background: linear-gradient(90deg, #f5f4ec, rgba(245, 244, 236, 0));
+  left: 0;
+}
+
+.testimonial-marquee::after {
+  background: linear-gradient(270deg, #f5f4ec, rgba(245, 244, 236, 0));
+  right: 0;
+}
+
+.testimonial-track {
+  animation: testimonial-scroll-left 64s linear infinite;
+  display: flex;
+  gap: 20px;
+  width: max-content;
+}
+
+.testimonial-marquee[data-direction="right"] .testimonial-track {
+  animation-name: testimonial-scroll-right;
+}
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(29, 42, 36, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 18px 42px rgba(29, 42, 36, 0.06);
+  flex: 0 0 clamp(270px, 27vw, 350px);
+  min-height: 300px;
+  padding: 30px;
+}
+
+.testimonial-card blockquote {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+}
+
+.testimonials-shell {
+  max-width: none;
+}
+
+.testimonials-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.7rem, 6vw, 6rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 0.92;
+  margin: 0;
+}
+
+.testimonials-title em {
+  font-style: italic;
+}
+
+@keyframes testimonial-scroll-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 9px));
+  }
+}
+
+@keyframes testimonial-scroll-right {
+  from {
+    transform: translateX(calc(-50% - 9px));
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .testimonial-track {
+    animation-play-state: paused;
+  }
+}
+
 .overflow-wrap-anywhere {
   overflow-wrap: anywhere;
   word-break: break-word;
