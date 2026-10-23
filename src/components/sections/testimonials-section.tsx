@@ -1,79 +1,52 @@
-import { Star } from "lucide-react";
-import { testimonials } from "@/src/components/data/site-content";
-
-const topTestimonials = testimonials.slice(0, Math.ceil(testimonials.length / 2));
-const bottomTestimonials = testimonials.slice(Math.ceil(testimonials.length / 2));
-
-function TestimonialCard({
-  name,
-  date,
-  quote,
-}: {
-  name: string;
-  date: string;
-  quote: string;
-}) {
-  return (
-    <article className="testimonial-card">
-      <div className="flex gap-1 text-[var(--clay)]" aria-label="Avaliação 5 de 5">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Star key={index} size={17} fill="currentColor" strokeWidth={1.8} />
-        ))}
-      </div>
-      <blockquote className="mt-5 text-xl leading-8 text-[var(--foreground)]">
-        &ldquo;{quote}&rdquo;
-      </blockquote>
-      <footer className="mt-6">
-        <p className="font-serif text-2xl leading-none text-[var(--foreground)]">{name}</p>
-        <p className="mt-2 text-xs font-semibold uppercase text-[var(--muted)]">{date} · Cabanas do Rio</p>
-      </footer>
-    </article>
-  );
-}
-
-function TestimonialTrack({
-  items,
-  direction,
-}: {
-  items: typeof testimonials;
-  direction: "left" | "right";
-}) {
-  const repeatedItems = [...items, ...items];
-
-  return (
-    <div className="testimonial-marquee" data-direction={direction}>
-      <div className="testimonial-track">
-        {repeatedItems.map((testimonial, index) => (
-          <TestimonialCard
-            key={`${testimonial.name}-${index}`}
-            name={testimonial.name}
-            date={testimonial.date}
-            quote={testimonial.quote}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
+import { Quote, ArrowUpRight } from "lucide-react";
+import { testimonials, contactLinks } from "../data/site-content";
+const selectedReviews = [
+  testimonials[0],
+  testimonials[2],
+  testimonials[4],
+  testimonials[11],
+  testimonials[15],
+  testimonials[17],
+];
 export function TestimonialsSection() {
   return (
-    <section id="avaliacoes" className="bg-[#f5f4ec] text-[var(--foreground)]">
-      <div className="section-shell testimonials-shell">
-        <div className="mx-auto mb-12 max-w-3xl text-center">
-          <p className="section-kicker">Avaliações</p>
-          <h2 className="testimonials-title">
-            193 avaliações, <em>nota 4,97</em>
-          </h2>
-          <p className="section-copy mx-auto mt-5 max-w-xl">
-            Marilene é Superhost há 4 anos, com 100% de taxa de resposta e normalmente responde em até 1 hora.
+    <section id="avaliacoes" className="reviews-section">
+      <div className="section-shell">
+        <div className="reviews-heading">
+          <div>
+            <p className="eyebrow">Na memória de quem esteve aqui</p>
+            <h2>
+              Quem vem,
+              <br />
+              leva histórias.
+            </h2>
+          </div>
+          <p>
+            Pequenos relatos de dias que ficaram.
+            <br />
+            Experiências compartilhadas por nossos hóspedes.
           </p>
         </div>
-
-        <div className="space-y-5 overflow-hidden">
-          <TestimonialTrack items={topTestimonials} direction="right" />
-          <TestimonialTrack items={bottomTestimonials} direction="left" />
+        <div className="reviews-wall">
+          {selectedReviews.map((review) => (
+            <article className="review-card" key={review.name + review.date} tabIndex={0}>
+              <Quote size={27} strokeWidth={1} aria-hidden="true" />
+              <blockquote>“{review.quote}”</blockquote>
+              <footer>
+                <span>{review.name}</span>
+                <time>{review.date}</time>
+              </footer>
+            </article>
+          ))}
         </div>
+        <a
+          className="text-link reviews-link"
+          href={contactLinks.airbnb}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Conheça os anúncios no Airbnb <ArrowUpRight size={17} />
+        </a>
       </div>
     </section>
   );

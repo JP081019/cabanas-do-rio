@@ -8,20 +8,28 @@ import { GallerySection } from "@/src/components/sections/gallery-section";
 import { HeroSection } from "@/src/components/sections/hero-section";
 import { LocationSection } from "@/src/components/sections/location-section";
 import { TestimonialsSection } from "@/src/components/sections/testimonials-section";
+import { ComparisonSection } from "@/src/components/sections/comparison-section";
+import { FaqSection } from "@/src/components/sections/faq-section";
+import { SiteHeader } from "@/src/components/site-header";
 
 export default function Home() {
   return (
-    <main>
-      <HeroSection />
-      <AboutSection />
-      <CabinsSection />
-      <ExperienceSection />
-      <GallerySection />
-      <TestimonialsSection />
-      <LocationSection />
-      <BookingHighlightSection />
-      <ContactSection />
+    <>
+      <SiteHeader />
+      <main id="conteudo">
+        <HeroSection />
+        <AboutSection />
+        <CabinsSection />
+        <ComparisonSection />
+        <ExperienceSection />
+        <GallerySection />
+        <TestimonialsSection />
+        <LocationSection />
+        <BookingHighlightSection />
+        <FaqSection />
+        <ContactSection />
+      </main>
       <FooterSection />
-    </main>
+    </>
   );
 }

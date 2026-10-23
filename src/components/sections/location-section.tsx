@@ -1,53 +1,97 @@
-import Image from "next/image";
-import { MapPinned, Navigation, Route } from "lucide-react";
-import { contactLinks } from "@/src/components/data/site-content";
-
+"use client";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReducedMotion } from "../use-reduced-motion";
+import { ArrowUpRight, MapPin, Plus } from "lucide-react";
+import { contactLinks } from "../data/site-content";
 export function LocationSection() {
+  const [expanded, setExpanded] = useState(false),
+    [origin, setOrigin] = useState("");
+  const reduced = useReducedMotion();
+  const route = new URL(contactLinks.maps);
+  if (origin.trim()) route.searchParams.set("origin", origin.trim());
   return (
-    <section id="localizacao" className="bg-[#f8faf3]">
-      <div className="section-shell grid gap-10 lg:grid-cols-[1fr_430px] lg:items-center">
+    <section id="localizacao" className="location-section">
+      <div className="section-shell location-layout">
         <div>
-          <p className="section-kicker">Localização</p>
-          <h2 className="section-title">Perto o suficiente para chegar, longe o bastante para respirar.</h2>
-          <p className="section-copy mt-6 max-w-2xl">
-            Estamos em Caeté, Alfredo Wagner, Santa Catarina. Abra a rota no Google Maps e venha pelo caminho mais tranquilo.
+          <p className="eyebrow">Caeté, Alfredo Wagner · SC</p>
+          <h2>
+            O caminho
+            <br />
+            também faz parte
+            <br />
+            da experiência.
+          </h2>
+          <p className="location-copy">
+            Entre a serra e a água, um endereço para deixar a rotina lá fora.
           </p>
+          <svg className="route-line" viewBox="0 0 400 120" fill="none" aria-hidden="true">
+            <path d="M0 70C80 0 120 150 210 65S310 30 370 65" />
+            <circle cx="370" cy="65" r="5" />
+          </svg>
         </div>
-
-        <aside className="relative justify-self-end overflow-hidden rounded-lg bg-[#202a1f] text-white shadow-[0_28px_70px_rgba(29,42,36,0.24)]">
-          <div className="relative h-48">
-            <Image src="/images/img4.jpeg" alt="Paisagem da região das Cabanas do Rio" fill sizes="430px" className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#202a1f] to-transparent" />
-          </div>
-
-          <div className="p-6">
-            <div className="flex items-start gap-4">
-              <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#eef4ea] text-[#202a1f]">
-                <MapPinned size={32} strokeWidth={1.4} />
-              </span>
-              <div>
-                <p className="text-sm uppercase tracking-[0.24em] text-white/58">Como chegar</p>
-                <h3 className="mt-2 font-serif text-3xl leading-none">Cabanas do Rio</h3>
-                <p className="mt-4 leading-7 text-white/74">
-                  R. Anitápolis, S/N, Caeté, Alfredo Wagner - SC
-                </p>
-              </div>
-            </div>
-
-            <a
-              href={contactLinks.maps}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-7 flex min-h-16 items-center justify-between rounded-md bg-[#eef4ea] px-5 font-serif text-xl !text-[#202a1f] transition hover:!bg-white hover:!text-[#202a1f]"
-            >
-              <span className="inline-flex items-center gap-3">
-                <Route size={25} strokeWidth={1.35} />
-                Abrir rota
-              </span>
-              <Navigation size={22} strokeWidth={1.5} />
-            </a>
-          </div>
-        </aside>
+        <motion.div layout={!reduced} className="location-card" transition={{ duration: 0.3 }}>
+          <button
+            className="location-trigger"
+            onClick={() => setExpanded(!expanded)}
+            aria-expanded={expanded}
+            aria-controls="location-map"
+          >
+            <MapPin size={30} strokeWidth={1.2} />
+            <span>
+              Cabanas do Rio<small>Alfredo Wagner, Santa Catarina</small>
+            </span>
+            <Plus size={21} className={expanded ? "is-rotated" : ""} />
+          </button>
+          <p className="location-address">
+            Rua Anitápolis, S/N · Caeté
+            <br />
+            Alfredo Wagner, Santa Catarina
+          </p>
+          <AnimatePresence initial={false}>
+            {expanded ? (
+              <motion.div
+                id="location-map"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: reduced ? 0 : 0.25 }}
+                className="location-map"
+              >
+                <iframe
+                  title="Mapa das Cabanas do Rio em Caeté, Alfredo Wagner"
+                  src="https://maps.google.com/maps?q=Cabanas%20do%20Rio%2C%20Caet%C3%A9%2C%20Alfredo%20Wagner%20SC&output=embed"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+          <form action="https://www.google.com/maps/dir/" method="get" target="_blank">
+            <input type="hidden" name="api" value="1" />
+            <input
+              type="hidden"
+              name="destination"
+              value={route.searchParams.get("destination") ?? ""}
+            />
+            <label htmlFor="route-origin">De onde você vem?</label>
+            <input
+              id="route-origin"
+              name="origin"
+              placeholder="Sua cidade ou ponto de partida"
+              value={origin}
+              onChange={(event) => setOrigin(event.target.value)}
+            />
+            <button className="button" type="submit">
+              Traçar rota no Google Maps <ArrowUpRight size={17} />
+            </button>
+          </form>
+          <button className="text-link map-toggle" onClick={() => setExpanded(!expanded)}>
+            {expanded ? "Recolher mapa" : "Explore o mapa"}
+            <span aria-hidden="true">{expanded ? "−" : "+"}</span>
+          </button>
+        </motion.div>
       </div>
     </section>
   );

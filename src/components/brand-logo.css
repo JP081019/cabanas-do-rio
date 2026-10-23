@@ -1,0 +1,52 @@
+.cabanas-logo {
+  display: block;
+  flex-shrink: 0;
+  height: auto;
+  object-fit: contain;
+}
+
+.header-logo,
+.menu-logo {
+  width: 66px;
+}
+
+.footer-logo {
+  width: 84px;
+}
+
+.floating-booking > .floating-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.floating-logo {
+  width: 40px;
+}
+
+.floating-brand small {
+  margin: 0;
+}
+
+.creative-logo {
+  display: block;
+  width: 64px;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.footer-bottom .creative-signature {
+  gap: 9px;
+}
+
+@media (max-width: 700px) {
+  .header-logo,
+  .menu-logo {
+    width: 52px;
+  }
+
+  .floating-booking > .floating-brand {
+    display: none;
+  }
+}

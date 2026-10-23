@@ -1,39 +1,95 @@
+"use client";
 import Image from "next/image";
-import { galleryImages } from "@/src/components/data/site-content";
-
+import dynamic from "next/dynamic";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useReducedMotion } from "../use-reduced-motion";
+import { ArrowUpRight } from "lucide-react";
+import { cabinCollection, riverPhoto } from "../data/redesign-content";
+const Lightbox = dynamic(() => import("../gallery/lightbox"));
+const photos = [
+  cabinCollection[0].photos[2],
+  cabinCollection[1].photos[3],
+  cabinCollection[0].photos[4],
+  cabinCollection[1].photos[1],
+  riverPhoto,
+  cabinCollection[0].photos[10],
+  cabinCollection[1].photos[7],
+  cabinCollection[0].photos[6],
+  cabinCollection[1].photos[2],
+];
 export function GallerySection() {
+  const ref = useRef<HTMLElement>(null),
+    reduced = useReducedMotion();
+  const [selected, setSelected] = useState<number | null>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 100%", "end 0%"] });
+  const transform = useTransform(
+    scrollYProgress,
+    [0, 0.55, 1],
+    [
+      "perspective(1400px) rotateX(19deg) scale(0.86)",
+      "perspective(1400px) rotateX(0deg) scale(1)",
+      "perspective(1400px) rotateX(-3deg) scale(1)",
+    ],
+  );
+  const left = useTransform(scrollYProgress, [0, 1], ["translateY(50px)", "translateY(-75px)"]);
+  const center = useTransform(scrollYProgress, [0, 1], ["translateY(-65px)", "translateY(60px)"]);
+  const right = useTransform(scrollYProgress, [0, 1], ["translateY(80px)", "translateY(-95px)"]);
   return (
-    <section id="galeria" className="bg-[var(--foreground)] text-[var(--paper)]">
-      <div className="section-shell overflow-hidden">
-        <div className="mb-9 flex flex-col gap-5 sm:mb-12 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl">
-            <p className="section-kicker text-[#9fd0c9]">Galeria</p>
-            <h2 className="section-title">Fragmentos do que o visitante encontra.</h2>
-          </div>
-          <p className="max-w-sm text-base leading-7 text-white/72">
-            Uma área feita para crescer: novas fotos entram aqui sem alterar as demais seções.
-          </p>
+    <section id="galeria" ref={ref} className="perspective-section">
+      <div className="perspective-sticky">
+        <div className="gallery-title">
+          <p className="eyebrow">Memórias que começam aqui</p>
+          <h2>
+            Um lugar para viver
+            <br />
+            sem pressa.
+          </h2>
         </div>
-
-        <div className="grid gap-4 sm:grid-cols-2 lg:auto-rows-[220px] lg:grid-cols-4">
-          {galleryImages.map((image, index) => (
-            <div
-              key={image.src}
-              className={`image-frame aspect-[4/3] shadow-[0_18px_40px_rgba(0,0,0,0.22)] lg:aspect-auto ${
-                index === 0 || index === 5 ? "sm:col-span-2 lg:col-span-2 lg:row-span-2" : ""
-              }`}
+        <motion.div className="perspective-gallery" style={reduced ? undefined : { transform }}>
+          {[left, center, right].map((movement, col) => (
+            <motion.div
+              key={col}
+              className={`perspective-column column-${col}`}
+              style={reduced ? undefined : { transform: movement }}
             >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover"
-              />
-            </div>
+              {photos.slice(col * 3, col * 3 + 3).map((photo, row) => (
+                <button
+                  key={photo.src}
+                  className={`perspective-photo ${photo.portrait ? "portrait" : "landscape"}`}
+                  onClick={() => setSelected(col * 3 + row)}
+                  aria-label={`Ampliar: ${photo.caption}`}
+                >
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    sizes="(max-width: 700px) 45vw, 32vw"
+                    className="object-cover"
+                  />
+                  <span>
+                    {photo.caption}
+                    <ArrowUpRight size={16} />
+                  </span>
+                </button>
+              ))}
+              {col !== 1 ? (
+                <p className="gallery-interlude">
+                  {col === 0 ? "Escute o rio." : "Fique mais um pouco."}
+                </p>
+              ) : null}
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
+      {selected !== null ? (
+        <Lightbox
+          photos={photos}
+          initialIndex={selected}
+          title="Um lugar para viver sem pressa"
+          onClose={() => setSelected(null)}
+        />
+      ) : null}
     </section>
   );
 }

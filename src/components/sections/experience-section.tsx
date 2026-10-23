@@ -1,30 +1,59 @@
-import { Droplets, FlameKindling, Leaf, Moon } from "lucide-react";
-import { experiences } from "@/src/components/data/site-content";
-
-const icons = [Droplets, Leaf, FlameKindling, Moon];
-
+"use client";
+import Image from "next/image";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReducedMotion } from "../use-reduced-motion";
+import { experienceMoments } from "../data/redesign-content";
 export function ExperienceSection() {
+  const [selected, setSelected] = useState(0),
+    reduced = useReducedMotion();
+  const moment = experienceMoments[selected];
   return (
-    <section id="experiencias" className="bg-[#dfe8dd]">
-      <div className="section-shell grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-        <div>
-          <p className="section-kicker">Experiências</p>
-          <h2 className="section-title">Dias com ritmo leve e memória boa.</h2>
-          <p className="section-copy mt-6">
-            Este bloco guarda tudo que envolve a vivência: descanso, alimentação, passeios e momentos
-            especiais. Depois podemos transformar cada item em uma página ou detalhe próprio.
-          </p>
+    <section id="experiencias" className="experience-section">
+      <div className="section-shell">
+        <div className="experience-heading">
+          <p className="eyebrow">Um dia nas Cabanas do Rio</p>
+          <h2>
+            Esqueça as horas.
+            <br />
+            Lembre dos momentos.
+          </h2>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {experiences.map((experience, index) => {
-            const Icon = icons[index];
-            return (
-              <div key={experience} className="bg-[var(--paper)] p-7">
-                <Icon aria-hidden size={26} className="text-[var(--river-dark)]" />
-                <p className="mt-8 font-serif text-2xl leading-tight">{experience}</p>
-              </div>
-            );
-          })}
+        <div className="experience-layout">
+          <div className="experience-image">
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={moment.photo.src}
+                className="gallery-photo-layer"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reduced ? 0 : 0.5 }}
+              >
+                <Image
+                  src={moment.photo.src}
+                  alt={moment.photo.alt}
+                  fill
+                  sizes="(max-width: 700px) 90vw, 55vw"
+                  className="object-cover"
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <div className="experience-timeline" role="group" aria-label="Momentos do dia">
+            {experienceMoments.map((item, index) => (
+              <button
+                key={item.time}
+                aria-pressed={selected === index}
+                onClick={() => setSelected(index)}
+              >
+                <span className="timeline-dot" />
+                <small>{item.time}</small>
+                <span>{item.title}</span>
+                {selected === index ? <p>{item.text}</p> : null}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -1,67 +1,112 @@
+"use client";
 import Image from "next/image";
-import { House, Waves } from "lucide-react";
-import { navigationItems } from "@/src/components/data/site-content";
-
+import { useRef, useState } from "react";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { useReducedMotion } from "../use-reduced-motion";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { riverPhoto } from "../data/redesign-content";
 export function HeroSection() {
-  const menuItems = navigationItems.filter((item) => item.label !== "Sobre");
-
+  const ref = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion();
+  const [contentVisible, setContentVisible] = useState(false);
+  const previousVisibility = useRef(false);
+  // Explicit percentages avoid native ViewTimeline range resets in sticky sections.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0%", "end 100%"] });
+  const clipPath = useTransform(
+    scrollYProgress,
+    [0, 0.7],
+    ["inset(28% 24% 22% 24% round 2px)", "inset(0% 0% 0% 0% round 0px)"],
+  );
+  const topTransform = useTransform(
+    scrollYProgress,
+    [0, 0.6],
+    ["translateX(0vw)", "translateX(-65vw)"],
+  );
+  const bottomTransform = useTransform(
+    scrollYProgress,
+    [0, 0.6],
+    ["translateX(0vw)", "translateX(65vw)"],
+  );
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.4, 0.65], [1, 1, 0]);
+  const contentOpacity = useTransform(scrollYProgress, [0.5, 0.85], [0, 1]);
+  const overlayOpacity = useTransform(scrollYProgress, [0.25, 0.85], [0, 0.46]);
+  useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    const visible = progress > 0.6;
+    if (visible !== previousVisibility.current) {
+      previousVisibility.current = visible;
+      setContentVisible(visible);
+    }
+  });
   return (
-    <section id="inicio" className="relative min-h-[78vh] overflow-hidden bg-[#07100c] text-[#f4f1e8]">
-      <Image
-        src="/images/hero-cabanas-rio.png"
-        alt="Cabana de madeira em meio à mata, com rio e área verde"
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,8,5,0.84)_0%,rgba(3,8,5,0.58)_31%,rgba(3,8,5,0.2)_62%,rgba(3,8,5,0.42)_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-52 bg-gradient-to-b from-black/55 to-transparent" />
-
-      <header className="relative z-10 mx-auto flex max-w-[1500px] items-center gap-8 px-7 py-8 lg:px-9">
-        <a className="flex shrink-0 items-center gap-5" href="#inicio" aria-label="Cabanas do Rio">
-          <span className="flex h-[76px] w-[76px] items-center justify-center rounded-full border border-white/90 text-white">
-            <span className="flex flex-col items-center">
-              <House size={30} strokeWidth={1.35} />
-              <Waves size={37} strokeWidth={1.25} className="-mt-1" />
-            </span>
-          </span>
-          <span className="font-serif text-[2rem] leading-none tracking-normal text-white">
-            Cabanas do Rio
-          </span>
-        </a>
-
-        <nav className="ml-auto hidden items-center gap-12 font-serif text-xl text-white lg:flex">
-          {menuItems.map((item) => (
-            <a key={item.href} href={item.href} className="transition hover:text-white/70">
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        <a
-          className="ml-2 hidden min-h-[54px] items-center justify-center bg-[#263023] px-9 font-serif text-xl text-white transition hover:bg-[#34402f] lg:inline-flex"
-          href="#contato"
-        >
-          Reservar agora
-        </a>
-      </header>
-
-      <div className="relative z-10 mx-auto flex max-w-[1500px] px-7 pb-28 pt-28 sm:pt-36 lg:px-24 lg:pb-36 lg:pt-40">
-        <div className="max-w-[520px]">
-          <h1 className="font-serif text-[clamp(4.6rem,7.8vw,8.2rem)] font-normal leading-[0.86] tracking-normal text-[#f3f0e8]">
-            Refúgio na natureza
-          </h1>
-          <p className="mt-9 max-w-[470px] font-serif text-[1.55rem] leading-[1.28] text-white">
-            Cabanas aconchegantes entre o rio, a mata e o silêncio.
-          </p>
-          <a
-            className="mt-9 inline-flex min-h-[64px] items-center justify-center bg-[#7b856f] px-10 font-serif text-[1.45rem] text-white shadow-[0_18px_36px_rgba(0,0,0,0.2)] transition hover:bg-[#8b967f]"
-            href="#contato"
+    <section
+      ref={ref}
+      id="inicio"
+      className="hero"
+      aria-label="Cabanas do Rio, hospedagem em Alfredo Wagner"
+    >
+      <div className="hero-sticky">
+        <motion.div className="hero-media" style={reduced ? undefined : { clipPath }}>
+          <Image
+            src={riverPhoto.src}
+            alt={riverPhoto.alt}
+            fill
+            preload
+            sizes="(max-width: 700px) 160vh, 100vw"
+            className="object-cover"
+          />
+          <motion.div className="hero-shade" style={{ opacity: reduced ? 0.38 : overlayOpacity }} />
+        </motion.div>
+        <h1 className="hero-wordmark" aria-label="Cabanas do Rio">
+          <motion.span
+            className="hero-word hero-word-top"
+            style={reduced ? undefined : { transform: topTransform, opacity: titleOpacity }}
           >
-            Reservar agora
+            Cabanas
+          </motion.span>
+          <motion.span
+            className="hero-word hero-word-bottom"
+            style={reduced ? undefined : { transform: bottomTransform, opacity: titleOpacity }}
+          >
+            do Rio
+          </motion.span>
+        </h1>
+        <motion.div
+          className="hero-footnote"
+          inert={contentVisible || reduced}
+          style={reduced ? undefined : { opacity: titleOpacity }}
+        >
+          <a href="#sobre">
+            <ArrowDown size={18} /> Desça. Respire. Descubra.
           </a>
-        </div>
+          <p>
+            Dois refúgios.
+            <br />
+            Um encontro com a natureza.
+          </p>
+        </motion.div>
+        <motion.div
+          className="hero-content"
+          inert={!reduced && !contentVisible}
+          style={{ opacity: reduced ? 1 : contentOpacity }}
+        >
+          <p>Alfredo Wagner, Santa Catarina</p>
+          <h2>
+            Desacelere.
+            <br />O rio continua correndo.
+          </h2>
+          <p>Cabanas entre a madeira, a mata e o seu próprio tempo.</p>
+          <div className="hero-actions">
+            <a href="#cabanas" className="button button-light">
+              Conheça as cabanas <ArrowDown size={17} />
+            </a>
+            <a href="#disponibilidade" className="text-link">
+              Ver disponibilidade <ArrowUpRight size={17} />
+            </a>
+          </div>
+        </motion.div>
+        <span className="hero-side-note" aria-hidden="true">
+          Natureza para sentir. Tempo para viver.
+        </span>
       </div>
     </section>
   );
