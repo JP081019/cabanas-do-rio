@@ -109,6 +109,7 @@
   height: 46px;
 }
 .calendar-month td button {
+  position: relative;
   display: block;
   width: 100%;
   height: 46px;
@@ -117,6 +118,28 @@
   transition:
     background 150ms ease,
     color 150ms ease;
+}
+.calendar-month .is-confirmed-blocked button::before,
+.calendar-month .is-confirmed-blocked button::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 23px;
+  height: 1.5px;
+  content: "";
+  background: #b64237;
+  pointer-events: none;
+}
+.calendar-month .is-confirmed-blocked button::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.calendar-month .is-confirmed-blocked button::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.calendar-month .is-confirmed-blocked button span {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 2px var(--paper);
 }
 .calendar-month td button:disabled {
   color: #788170;
@@ -167,6 +190,25 @@
 }
 .legend-blocked {
   background: repeating-linear-gradient(135deg, transparent 0 3px, #7d8972 3px 4px);
+}
+.legend-blocked-x {
+  position: relative;
+}
+.legend-blocked-x::before,
+.legend-blocked-x::after {
+  position: absolute;
+  top: 4px;
+  left: 1px;
+  width: 8px;
+  height: 1px;
+  content: "";
+  background: #b64237;
+}
+.legend-blocked-x::before {
+  transform: rotate(45deg);
+}
+.legend-blocked-x::after {
+  transform: rotate(-45deg);
 }
 .legend-selected {
   background: var(--forest);

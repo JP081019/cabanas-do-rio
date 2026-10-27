@@ -150,8 +150,17 @@ export function StayCalendar({
                           !!checkIn &&
                           day > checkIn &&
                           !overlaps(checkIn, day, periods);
+                        const confirmedBlocked =
+                          !!data?.complete &&
+                          !loading &&
+                          day >= today &&
+                          day <= windowEnd &&
+                          blocked &&
+                          !selected &&
+                          !checkoutBoundary;
                         const classes = [
                           blocked ? "is-blocked" : "",
+                          confirmedBlocked ? "is-confirmed-blocked" : "",
                           selected ? "is-selected" : "",
                           range ? "is-in-range" : "",
                           !data?.complete ? "is-unknown" : "",
@@ -180,7 +189,7 @@ export function StayCalendar({
                                 onSelect(day);
                               }}
                             >
-                              {Number(day.slice(8))}
+                              <span>{Number(day.slice(8))}</span>
                             </button>
                           </td>
                         );
@@ -194,7 +203,7 @@ export function StayCalendar({
       </div>
       <div className="calendar-legend">
         <span>
-          <i className="legend-blocked" />
+          <i className="legend-blocked legend-blocked-x" />
           Noite bloqueada
         </span>
         <span>
