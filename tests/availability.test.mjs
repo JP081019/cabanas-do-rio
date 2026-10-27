@@ -163,9 +163,9 @@ test("partial failures, total failures, missing sources and stale cache never co
     assert.equal(snapshot.complete, false);
     assert.equal(evaluateStay(snapshot, "2026-11-20", "2026-11-22").status, "unconfirmed");
   }
-  assert.equal(assembleSnapshot("mirante", [good([])], 1, now).complete, true);
+  assert.equal(assembleSnapshot("mirante", [good([])], 2, now).complete, false);
   assert.equal(
-    assembleSnapshot("mirante", [{ ok: false, reason: "invalid" }], 1, now).status,
+    assembleSnapshot("mirante", [{ ok: false, reason: "invalid" }], 2, now).status,
     "error",
   );
 });

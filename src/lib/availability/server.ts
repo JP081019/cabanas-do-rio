@@ -28,7 +28,7 @@ const cachedSource = unstable_cache(
     if (!url || !isAllowedFeedUrl(url, platform)) return { ok: false, reason: "configuration" };
     return fetchCalendarSource(url, { windowStart, windowEnd });
   },
-  ["cabanas-ical-v1"],
+  ["cabanas-ical-v2"],
   { revalidate: CACHE_SECONDS },
 );
 
