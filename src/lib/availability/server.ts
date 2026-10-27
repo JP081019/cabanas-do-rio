@@ -10,7 +10,10 @@ export const requiredFeeds = {
     { variable: "CABANA_RIO_AIRBNB_ICAL", platform: "airbnb" },
     { variable: "CABANA_RIO_BOOKING_ICAL", platform: "booking" },
   ],
-  mirante: [{ variable: "MIRANTE_CAETE_AIRBNB_ICAL", platform: "airbnb" }],
+  mirante: [
+    { variable: "MIRANTE_CAETE_AIRBNB_ICAL", platform: "airbnb" },
+    { variable: "MIRANTE_CAETE_BOOKING_ICAL", platform: "booking" },
+  ],
 } as const;
 
 // Existing project has Cache Components disabled. Data Cache avoids a framework migration.
